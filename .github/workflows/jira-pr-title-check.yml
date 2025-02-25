@@ -1,0 +1,27 @@
+name: JIRA PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check PR title starts with JIRA ticket in required format
+        run: |
+          PR_TITLE=$(jq --raw-output .pull_request.title "$GITHUB_EVENT_PATH")
+
+          # Define the pattern: feat(<JIRA ticket>): <commit message>
+          JIRA_PATTERN="^(feat|fix|chore|docs|test|refactor|perf|ci|build|style|revert)\([A-Z]+-[0-9]+\): .+"
+
+          if [[ ! "$PR_TITLE" =~ $JIRA_PATTERN ]]; then
+            echo "Error: PR title must follow the format 'type(JIRA ticket): commit message' (e.g., 'feat(PROJECT-123): Add new feature')."
+            exit 1
+          else
+            echo "PR title is valid."
+          fi
