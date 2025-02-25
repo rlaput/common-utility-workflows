@@ -1,0 +1,27 @@
+name: PR Branch Name Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches:
+      - develop
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate branch name
+        run: |
+          # Get the branch name of the PR
+          BRANCH_NAME=$(jq --raw-output .pull_request.head.ref "$GITHUB_EVENT_PATH")
+
+          # Define the pattern: <type>/<JIRA-ticket-number>-<any-text>
+          BRANCH_PATTERN="^(feat|fix|chore|docs|style|refactor|test|build|ci)\/[A-Z]+-[0-9]+-.+"
+
+          if [[ ! "$BRANCH_NAME" =~ $BRANCH_PATTERN ]]; then
+            echo "Error: Branch name must follow the format 'type/JIRA-ticket-number-description' (e.g., 'feat/PROJECT-123-add-readme')."
+            exit 1
+          else
+            echo "Branch name is valid."
+          fi

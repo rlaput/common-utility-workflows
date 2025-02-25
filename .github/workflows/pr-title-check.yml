@@ -1,8 +1,10 @@
-name: JIRA PR Title Check
+name: PR Title Check
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
+    branches:
+      - develop
 
 jobs:
   check-title:
