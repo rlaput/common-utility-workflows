@@ -9,9 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Check PR title starts with JIRA ticket in required format
         run: |
           PR_TITLE=$(jq --raw-output .pull_request.title "$GITHUB_EVENT_PATH")
