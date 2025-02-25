@@ -15,10 +15,9 @@ jobs:
         run: |
           # Get the branch name of the PR
           BRANCH_NAME=$(jq --raw-output .pull_request.head.ref "$GITHUB_EVENT_PATH")
-          echo "$BRANCH_NAME"
 
           # Define the pattern: <type>/<JIRA-ticket-number>-<any-text>
-          BRANCH_PATTERN="^(feat|fix|chore|docs|style|refactor|test|build|ci)\/[A-Z]+-[0-9]+-.+"
+          BRANCH_PATTERN="^(feat|fix|chore|docs|test|refactor|perf|ci|build|style|revert)\/[A-Z]+-[0-9]+-.+"
 
           if [[ ! "$BRANCH_NAME" =~ $BRANCH_PATTERN ]]; then
             echo "Error: Branch name must follow the format 'type/JIRA-ticket-number-description' (e.g., 'feat/PROJECT-123-add-readme')."
